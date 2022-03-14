@@ -1,0 +1,332 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ShareArtModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CourseTbl">
+          <Key>
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="CourseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CourseName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TutorId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ShareArt.dbo.TuteesCoursersJoinTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TuteesCoursersJoinTable">
+          <Key>
+            <PropertyRef Name="TuteesId" />
+            <PropertyRef Name="CoursersId" />
+          </Key>
+          <Property Name="TuteesId" Type="int" Nullable="false" />
+          <Property Name="CoursersId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TuteeTbl">
+          <Key>
+            <PropertyRef Name="TuteeId" />
+          </Key>
+          <Property Name="TuteeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TuteeFullName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TuteePassword" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TuteeUsername" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TutorTbl">
+          <Key>
+            <PropertyRef Name="TutorId" />
+          </Key>
+          <Property Name="TutorId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TutorFullName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TutorPassword" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TutorUsername" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ShareArt.dbo.TutorTuteesJoinTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TutorTuteesJoinTable">
+          <Key>
+            <PropertyRef Name="TutorId" />
+            <PropertyRef Name="TuteesId" />
+          </Key>
+          <Property Name="TutorId" Type="int" Nullable="false" />
+          <Property Name="TuteesId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CourseTbl_TutorTbl">
+          <End Role="TutorTbl" Type="Self.TutorTbl" Multiplicity="1" />
+          <End Role="CourseTbl" Type="Self.CourseTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TutorTbl">
+              <PropertyRef Name="TutorId" />
+            </Principal>
+            <Dependent Role="CourseTbl">
+              <PropertyRef Name="TutorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TuteesCoursersJoinTable_CourseTbl">
+          <End Role="CourseTbl" Type="Self.CourseTbl" Multiplicity="1" />
+          <End Role="TuteesCoursersJoinTable" Type="Self.TuteesCoursersJoinTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CourseTbl">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="TuteesCoursersJoinTable">
+              <PropertyRef Name="CoursersId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TuteesCoursersJoinTable_TuteeTbl">
+          <End Role="TuteeTbl" Type="Self.TuteeTbl" Multiplicity="1" />
+          <End Role="TuteesCoursersJoinTable" Type="Self.TuteesCoursersJoinTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TuteeTbl">
+              <PropertyRef Name="TuteeId" />
+            </Principal>
+            <Dependent Role="TuteesCoursersJoinTable">
+              <PropertyRef Name="TuteesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TutorTuteesJoinTable_TuteeTbl">
+          <End Role="TuteeTbl" Type="Self.TuteeTbl" Multiplicity="1" />
+          <End Role="TutorTuteesJoinTable" Type="Self.TutorTuteesJoinTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TuteeTbl">
+              <PropertyRef Name="TuteeId" />
+            </Principal>
+            <Dependent Role="TutorTuteesJoinTable">
+              <PropertyRef Name="TuteesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TutorTuteesJoinTable_TutorTbl">
+          <End Role="TutorTbl" Type="Self.TutorTbl" Multiplicity="1" />
+          <End Role="TutorTuteesJoinTable" Type="Self.TutorTuteesJoinTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TutorTbl">
+              <PropertyRef Name="TutorId" />
+            </Principal>
+            <Dependent Role="TutorTuteesJoinTable">
+              <PropertyRef Name="TutorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ShareArtModelStoreContainer">
+          <EntitySet Name="CourseTbl" EntityType="Self.CourseTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TuteeTbl" EntityType="Self.TuteeTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TutorTbl" EntityType="Self.TutorTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TuteesCoursersJoinTable" EntityType="Self.TuteesCoursersJoinTable" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[TuteesCoursersJoinTable].[TuteesId] AS [TuteesId], 
+[TuteesCoursersJoinTable].[CoursersId] AS [CoursersId]
+FROM [dbo].[TuteesCoursersJoinTable] AS [TuteesCoursersJoinTable]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="TutorTuteesJoinTable" EntityType="Self.TutorTuteesJoinTable" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[TutorTuteesJoinTable].[TutorId] AS [TutorId], 
+[TutorTuteesJoinTable].[TuteesId] AS [TuteesId]
+FROM [dbo].[TutorTuteesJoinTable] AS [TutorTuteesJoinTable]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_CourseTbl_TutorTbl" Association="Self.FK_CourseTbl_TutorTbl">
+            <End Role="TutorTbl" EntitySet="TutorTbl" />
+            <End Role="CourseTbl" EntitySet="CourseTbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TuteesCoursersJoinTable_CourseTbl" Association="Self.FK_TuteesCoursersJoinTable_CourseTbl">
+            <End Role="CourseTbl" EntitySet="CourseTbl" />
+            <End Role="TuteesCoursersJoinTable" EntitySet="TuteesCoursersJoinTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TuteesCoursersJoinTable_TuteeTbl" Association="Self.FK_TuteesCoursersJoinTable_TuteeTbl">
+            <End Role="TuteeTbl" EntitySet="TuteeTbl" />
+            <End Role="TuteesCoursersJoinTable" EntitySet="TuteesCoursersJoinTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TutorTuteesJoinTable_TuteeTbl" Association="Self.FK_TutorTuteesJoinTable_TuteeTbl">
+            <End Role="TuteeTbl" EntitySet="TuteeTbl" />
+            <End Role="TutorTuteesJoinTable" EntitySet="TutorTuteesJoinTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TutorTuteesJoinTable_TutorTbl" Association="Self.FK_TutorTuteesJoinTable_TutorTbl">
+            <End Role="TutorTbl" EntitySet="TutorTbl" />
+            <End Role="TutorTuteesJoinTable" EntitySet="TutorTuteesJoinTable" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ShareArtModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CourseTbl">
+          <Key>
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="CourseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CourseName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TutorId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TutorTbl" Relationship="Self.FK_CourseTbl_TutorTbl" FromRole="CourseTbl" ToRole="TutorTbl" />
+          <NavigationProperty Name="TuteeTbls" Relationship="Self.TuteesCoursersJoinTable" FromRole="CourseTbl" ToRole="TuteeTbl" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TuteeTbl">
+          <Key>
+            <PropertyRef Name="TuteeId" />
+          </Key>
+          <Property Name="TuteeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TuteeFullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TuteePassword" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TuteeUsername" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CourseTbls" Relationship="Self.TuteesCoursersJoinTable" FromRole="TuteeTbl" ToRole="CourseTbl" />
+          <NavigationProperty Name="TutorTbls" Relationship="Self.TutorTuteesJoinTable" FromRole="TuteeTbl" ToRole="TutorTbl" />
+        </EntityType>
+        <EntityType Name="TutorTbl">
+          <Key>
+            <PropertyRef Name="TutorId" />
+          </Key>
+          <Property Name="TutorId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TutorFullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TutorPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TutorUsername" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CourseTbls" Relationship="Self.FK_CourseTbl_TutorTbl" FromRole="TutorTbl" ToRole="CourseTbl" />
+          <NavigationProperty Name="TuteeTbls" Relationship="Self.TutorTuteesJoinTable" FromRole="TutorTbl" ToRole="TuteeTbl" />
+        </EntityType>
+        <Association Name="FK_CourseTbl_TutorTbl">
+          <End Role="TutorTbl" Type="Self.TutorTbl" Multiplicity="1" />
+          <End Role="CourseTbl" Type="Self.CourseTbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TutorTbl">
+              <PropertyRef Name="TutorId" />
+            </Principal>
+            <Dependent Role="CourseTbl">
+              <PropertyRef Name="TutorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TuteesCoursersJoinTable">
+          <End Role="CourseTbl" Type="Self.CourseTbl" Multiplicity="*" />
+          <End Role="TuteeTbl" Type="Self.TuteeTbl" Multiplicity="*" />
+        </Association>
+        <Association Name="TutorTuteesJoinTable">
+          <End Role="TuteeTbl" Type="Self.TuteeTbl" Multiplicity="*" />
+          <End Role="TutorTbl" Type="Self.TutorTbl" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="ShareArtEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CourseTbls" EntityType="Self.CourseTbl" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="TuteeTbls" EntityType="Self.TuteeTbl" />
+          <EntitySet Name="TutorTbls" EntityType="Self.TutorTbl" />
+          <AssociationSet Name="FK_CourseTbl_TutorTbl" Association="Self.FK_CourseTbl_TutorTbl">
+            <End Role="TutorTbl" EntitySet="TutorTbls" />
+            <End Role="CourseTbl" EntitySet="CourseTbls" />
+          </AssociationSet>
+          <AssociationSet Name="TuteesCoursersJoinTable" Association="Self.TuteesCoursersJoinTable">
+            <End Role="CourseTbl" EntitySet="CourseTbls" />
+            <End Role="TuteeTbl" EntitySet="TuteeTbls" />
+          </AssociationSet>
+          <AssociationSet Name="TutorTuteesJoinTable" Association="Self.TutorTuteesJoinTable">
+            <End Role="TuteeTbl" EntitySet="TuteeTbls" />
+            <End Role="TutorTbl" EntitySet="TutorTbls" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ShareArtModelStoreContainer" CdmEntityContainer="ShareArtEntities">
+          <EntitySetMapping Name="CourseTbls">
+            <EntityTypeMapping TypeName="ShareArtModel.CourseTbl">
+              <MappingFragment StoreEntitySet="CourseTbl">
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="CourseName" ColumnName="CourseName" />
+                <ScalarProperty Name="TutorId" ColumnName="TutorId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="ShareArtModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TuteeTbls">
+            <EntityTypeMapping TypeName="ShareArtModel.TuteeTbl">
+              <MappingFragment StoreEntitySet="TuteeTbl">
+                <ScalarProperty Name="TuteeId" ColumnName="TuteeId" />
+                <ScalarProperty Name="TuteeFullName" ColumnName="TuteeFullName" />
+                <ScalarProperty Name="TuteePassword" ColumnName="TuteePassword" />
+                <ScalarProperty Name="TuteeUsername" ColumnName="TuteeUsername" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TutorTbls">
+            <EntityTypeMapping TypeName="ShareArtModel.TutorTbl">
+              <MappingFragment StoreEntitySet="TutorTbl">
+                <ScalarProperty Name="TutorId" ColumnName="TutorId" />
+                <ScalarProperty Name="TutorFullName" ColumnName="TutorFullName" />
+                <ScalarProperty Name="TutorPassword" ColumnName="TutorPassword" />
+                <ScalarProperty Name="TutorUsername" ColumnName="TutorUsername" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="TuteesCoursersJoinTable" TypeName="ShareArtModel.TuteesCoursersJoinTable" StoreEntitySet="TuteesCoursersJoinTable">
+            <EndProperty Name="CourseTbl">
+              <ScalarProperty Name="CourseId" ColumnName="CoursersId" />
+            </EndProperty>
+            <EndProperty Name="TuteeTbl">
+              <ScalarProperty Name="TuteeId" ColumnName="TuteesId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="TutorTuteesJoinTable" TypeName="ShareArtModel.TutorTuteesJoinTable" StoreEntitySet="TutorTuteesJoinTable">
+            <EndProperty Name="TuteeTbl">
+              <ScalarProperty Name="TuteeId" ColumnName="TuteesId" />
+            </EndProperty>
+            <EndProperty Name="TutorTbl">
+              <ScalarProperty Name="TutorId" ColumnName="TutorId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
